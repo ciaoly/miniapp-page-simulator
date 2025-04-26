@@ -1,0 +1,16 @@
+{
+  "short_name": "微信小程序页面Demo",
+  "name": "微信小程序页面Demo",
+  "icons": [
+    {
+      "src": "static/logo.png",
+      "type": "image/png",
+      "sizes": "288x288"
+    }
+  ],
+  "id": "mps-demo",
+  "start_url": ".",
+  "display": "standalone",
+  "scope": "/",
+  "description": "微信小程序页面Demo模拟"
+}

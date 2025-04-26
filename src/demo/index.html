@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html data-long-press-delay="500">
+
+<head>
+  <title>示例</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta name="viewport"
+    content="width=device-width,height=device-height,viewport-fit=cover,initial-scale=1,maximum-scale=1,user-scalable=0">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="./static/logo.png">
+  <link rel="apple-touch-icon" sizes="360x360" href="./static/logo.png">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="../common/nav.css">
+  <script src="../common/base.js"></script>
+</head>
+
+<body>
+  <view class="navbar navbar--wechat">
+    <view class="navbar__placeholder"></view>
+    <view class="navbar__inner" style="color: black; background: white;">
+      <view class="navbar__left">
+        <view class="navbar__buttons" onclick="history.back();">
+          <view class="navbar__button-goback"></view>
+        </view>
+      </view>
+      <view class="navbar__center">
+        <text>标题栏</text>
+      </view>
+      <view class="navbar__right">
+
+      </view>
+    </view>
+  </view>
+  <div class="capsule capsule--wechat" onclick="navigateHome();">
+    <svg class="capsule__menu-icon" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="32" cy="14" r="9.5" />
+      <circle cx="54" cy="14" r="6" />
+      <circle cx="10" cy="14" r="6" />
+    </svg>
+    <div class="capsule__splitter"></div>
+    <svg class="capsule__exit-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="9" />
+      <circle cx="30" cy="30" r="23" stroke-width="6" fill="transparent" />
+    </svg>
+  </div>
+  <view class="bg blue">
+    <view class="shade"></view>
+    <view class="qrcode"
+      style="background-image: url(./static/miniapp-logo.svg); background-size: 98.667vw 115.067vw; background-repeat: no-repeat;">
+      <!-- <view class="sy" style="display: none;">
+      <image src="./static/miniapp-logo.svg"></image>
+      <image src="./static/miniapp-logo.svg" style="position: relative;top: -2.133vw;left: -5.867vw"></image>
+    </view> -->
+      <view class="over-time" style="font-size: 8vw;"><span id="month"></span>月<span id="day"></span>日 <span
+          id="time"></span></view>
+      <view class="qr-info">
+        <view style="position: relative;">
+          <section id="masked" onclick="toggleMask(false);">
+            <span id="name-masked"></span>
+            <view id="idcard-masked"></view>
+            <image class="eye" src="./static/cleye.png"></image>
+          </section>
+          <section id="unmasked" style="display: none;" onclick="toggleMask(true);">
+            <span id="name"></span>
+            <view id="idcard"></view>
+            <image class="eye" src="./static/opeye.png"></image>
+          </section>
+        </view>
+        <section id="checkin" style="display: none;">
+          <view id="place-name"></view>
+          <view id="place-address"></view>
+        </section>
+      </view>
+    </view>
+  </view>
+</body>
+<script src="./static/long-press-event.min.js"></script>
+<script src="./static/datetime.js"></script>
+<script src="./static/base-hook.js"></script>
+<script>
+  addStorageField("_name", "#name-masked", "名字", "张三", presetFilters.lastcharonly);
+  addStorageField("_name", "#name", "名字", "张三");
+  addStorageField("_idcard", "#idcard-masked", "员工ID", "11010010111110011", presetFilters.idcard(4, 4));
+  addStorageField("_idcard", "#idcard", "员工ID", "11010010111110011");
+
+  addStorageField("_place_name", "#place-name", "名称", "四通桥");
+  addStorageField("_place_address", "#place-address", "地址", "点击修改地址");
+
+  setDynamicTime("#month", 5, 7, str => str.replace(/0(\d{1})/, "$1"));
+  setDynamicTime("#day", 8, 10, str => str.replace(/0(\d{1})/, "$1"));
+  setDynamicTime("#time", 11, 19);
+
+  function toggleMask(b) {
+    document.getElementById("unmasked").style.display = b ? "none" : "block";
+    document.getElementById("masked").style.display = b ? "block" : "none";
+  }
+
+  let b = false;
+  function toggleCheckin() {
+    b = !b;
+    if (b) {
+      document.querySelector(".bg").classList.add("blue");
+      document.getElementById("checkin").style.display = "block";
+      document.body.style.backgroundColor = "#468af9";
+    } else {
+      document.querySelector(".bg").classList.remove("blue");
+      document.getElementById("checkin").style.display = "none";
+      document.body.style.backgroundColor = "green";
+    }
+  }
+
+  document.querySelector("#natr-date").innerText = getDateStr(ncovDateTimes[0]);
+
+  if (window.location.hash == "#checkin") {
+    toggleCheckin();
+  }
+
+  initServiceWorker("demo");
+</script>
+
+</html>

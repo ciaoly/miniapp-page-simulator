@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<title>html-demo</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width,height=device-height,viewport-fit=cover,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="theme-color" content="#DDC089">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="./static/ssbapp-logo.png">
+<link rel="apple-touch-icon" sizes="492x492" href="./static/ssbapp-logo.png">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="../common/nav.css">
+<script src="../common/base.js"></script>
+<style>
+  .eyes-open #img-eyes-open {
+    display: block;
+  }
+  .eyes-open #img-eyes-closed {
+    display: none;
+  }
+  #img-eyes-open {
+    display: none;
+  }
+  #img-eyes-closed {
+    display: block;
+  }
+</style>
+<div class="capsule capsule--wechat" onclick="navigateHome();">
+  <svg class="capsule__menu-icon" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="14" r="9.5"/>
+    <circle cx="54" cy="14" r="6"/>
+    <circle cx="10" cy="14" r="6"/>
+  </svg>
+  <div class="capsule__splitter"></div>
+  <svg class="capsule__exit-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="30" r="9"/>
+    <circle cx="30" cy="30" r="23" stroke-width="6" fill="transparent"/>
+  </svg>
+</div>
+<view class="top" style="height: 58px; padding-top: env(safe-area-inset-top, 0); box-sizing: content-box;">
+  <image src="./static/suishenma_bg.png" style="width:100%;height:813.11px;"></image>
+  <view class="text" style="bottom:3.333vw">HTML示例</view>
+  <view bindtap="goBack" class="back">
+    <image src="./static/back.png" onclick="history.back();"></image>
+  </view>
+</view>
+<view class="page" style="padding-top: 58px; padding-top: calc(58px + env(safe-area-inset-top, 0));">
+  <view class="content contentBox">
+    <view style="height: 7.467vw;">
+      可以直接使用wxml的view元素
+    </view>
+    <view style="display: flex;justify-content: center;margin-top: 4.267vw;">
+      <view class="photo">
+        demo效果
+      </view>
+    </view>
+    <view class="nameBox">
+      <view class="tainerBox eyes-open">
+        <view class="name" id="_name"></view>
+        <view bindtap="handleShowName" class="nameHide" id="img-eyes-open" onclick="switchNameDisplay(false);">
+          <image src="./static/eysOpen.png" style="width:5.333vw;height:5.333vw;"></image>
+        </view>
+        <view bindtap="handleShowName" class="nameHide" id="img-eyes-closed" onclick="switchNameDisplay(true);">
+          <image src="./static/eyeClose.png" style="width:5.333vw;height:5.333vw;"></image>
+        </view>
+      </view>
+    </view>
+    <view class="time">
+      <span id="_date"></span>
+      <span id="_time"></span><span class="timeSecond" id="_sec"></span>
+    </view>
+  </view>
+  <view class="more contentBox">
+    <view class="rec-swiper" style="height:19.467vw">
+      建议安装为pwa使用
+    </view>
+    <view ariaHidden="true" class="dots-rec2" style="margin-top: 1.867vw;">
+      <view class="dot2 active"></view>
+      <view class="dot2"></view>
+    </view>
+  </view>
+</view>
+<script>
+  setDynamicTime("#_date", 0, 10);
+  setDynamicTime("#_time", 11, 17);
+  setDynamicTime("#_sec", 17, 19);
+
+  let _name = localStorage.getItem("_name") || "张三";
+  document.getElementById("_name").addEventListener("click", () => {
+    const res = window.prompt("修改名字：", _name);
+    if (res == "" || res == null) localStorage.removeItem("_name");
+    else localStorage.setItem("_name", res);
+    _name = res || "张三";
+    switchNameDisplay(show_name);
+  });
+  let show_name = false;
+  function switchNameDisplay(t) {
+    show_name = t;
+    const hidden_name = new Array(_name.length).join("*") + _name.substr(-1);
+    document.getElementById("_name").innerText = show_name ? _name : hidden_name;
+    document.getElementsByClassName("tainerBox")[0].classList.add(t ? "eyes-open" : "eyes-closed");
+    document.getElementsByClassName("tainerBox")[0].classList.remove(t ? "eyes-closed" : "eyes-open");
+  }
+  switchNameDisplay(false);
+
+  const default_img = "./static/kangyuan.png";
+  if (localStorage.getItem("_img")) {
+    document.getElementById("_img").attributes["src"].value = localStorage.getItem("_img");
+    document.querySelector(".photo").classList.add("photoPicAfter");
+  }
+  document.getElementById("_img").addEventListener("click", () => {
+    if (localStorage.getItem("_img")) {
+      localStorage.removeItem("_img");
+      document.getElementById("_img").attributes["src"].value = default_img;
+      document.querySelector(".photo").classList.remove("photoPicAfter");
+      return;
+    }
+    const input = document.getElementById("upload");
+    input.click();
+  });
+
+  initServiceWorker("html-demo");
+</script>

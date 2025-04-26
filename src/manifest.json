@@ -1,0 +1,16 @@
+{
+  "short_name": "微信小程序",
+  "name": "微信小程序",
+  "icons": [
+    {
+      "src": "common/images/logo.png",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "mps-index",
+  "start_url": ".",
+  "display": "standalone",
+  "scope": "/",
+  "description": "微信小程序页面模拟"
+}
